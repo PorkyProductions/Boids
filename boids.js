@@ -6,36 +6,87 @@ class Boid {
 
     }
     Draw() {
-        DrawRect(this.x, this.y, boidSize, 2 * boidSize, this.angle, "red");
+        ctx.save();
+        ctx.beginPath();
+
+        ctx.moveTo(this.x + Math.cos(this.angle * DEG_TO_RAD) * boidSize / 2, this.y + Math.sin(this.angle * DEG_TO_RAD) * boidSize / 2);
+        ctx.lineTo(this.x + Math.cos((this.angle + 140) * DEG_TO_RAD) * boidSize / 2, this.y + Math.sin((this.angle + 140) * DEG_TO_RAD) * boidSize / 2)
+        ctx.lineTo(this.x + Math.cos((this.angle + 220) * DEG_TO_RAD) * boidSize / 2, this.y + Math.sin((this.angle + 220) * DEG_TO_RAD) * boidSize / 2)
+        ctx.fill();
+        ctx.restore();
+        console.log("ye");
+    }
+    Move() {
+        this.x += Math.cos(this.angle * DEG_TO_RAD) * boidSpeed;
+        this.y += Math.sin(this.angle * DEG_TO_RAD) * boidSpeed;
+
+        if (this.x < -boidSize) {
+            this.x = canvas.width + boidSize;
+        }
+        if (this.y < -boidSize) {
+            this.y = canvas.height + boidSize;
+        }
+        if (this.x > canvas.width + boidSize) {
+            this.x = -boidSize;
+        }
+        if (this.y > canvas.height + boidSize) {
+            this.y = -boidSize;
+        }
     }
 }
+const DEG_TO_RAD = Math.PI / 180;
+
 
 const canvas = document.getElementById("canvas");
 canvas.width = canvas.clientWidth;
 canvas.height = canvas.clientHeight;
 const ctx = canvas.getContext("2d");
 
-const boidSize = canvas.width / 100;
+const boidSize = canvas.width / 30;
 const numOfBoids = 50;
+let boidSpeed = 3;
 
 let boids = [];
-for (var i = 0; i < 50; i++) {
-    boids.push(new Boid);
-}
+
 
 
 
 function Start() {
-
+    //create boids
+    for (var i = 0; i < numOfBoids; i++) {
+        boids.push(new Boid);
+    }
 }
 function Update() {
-    DrawAll();
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    UpdateInputs();
+    UpdateBoids();
+    
 }
-function DrawAll() {
+
+
+
+let alwaysMove = false;
+
+
+function UpdateBoids() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
     boids.forEach(function (boid) {
+
+        if (alwaysMove) {
+            boid.Move();
+        }
         boid.Draw();
+
     })
 }
+function UpdateInputs() {
+    alwaysMove = document.querySelector('.checkboxMove:checked') != null;
+}
+
+
 
 
 
@@ -77,7 +128,7 @@ document.addEventListener('DOMContentLoaded', function () {
 }, false);
 setInterval(function () {
     Update();
-}, 50)
+}, 5)
 
 
 
