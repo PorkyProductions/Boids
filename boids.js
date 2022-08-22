@@ -80,10 +80,10 @@
         if (Math.abs(c) < Math.abs(a) && Math.abs(c) < Math.abs(a)) {
             smallestAbs = c;
         }
-        if (smallestAbs > 30) {
+        if (smallestAbs > 10) {
             this.angle += boidRotationSpeed;
         }
-        if (smallestAbs < -30) {
+        if (smallestAbs < -10) {
             this.angle -= boidRotationSpeed;
         }
         
